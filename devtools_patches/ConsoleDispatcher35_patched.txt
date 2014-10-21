@@ -1,0 +1,37 @@
+WebInspector.ConsoleDispatcher=function(console)
+{
+this._console = console;
+}
+WebInspector.ConsoleDispatcher.prototype={
+messageAdded:function(payload)
+{
+var trace=payload.stackTrace;
+if(payload.url.indexOf("src/Dev/log4js.js")>0)
+	trace=trace.slice(2);
+var consoleMessage=new WebInspector.ConsoleMessage(
+payload.source,
+payload.level,
+payload.text,
+payload.type,
+payload.url,
+payload.line,
+payload.column,
+payload.networkRequestId,
+payload.parameters,
+trace,
+payload.timestamp*1000,
+this._console._enablingConsole);
+this._console.addMessage(consoleMessage,true);
+},
+
+
+messageRepeatCountUpdated:function(count)
+{
+},
+
+messagesCleared:function()
+{
+if(!WebInspector.settings.preserveConsoleLog.get())
+	this._console.clearMessages();
+}
+}

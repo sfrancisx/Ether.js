@@ -1,0 +1,64 @@
+function doGetProperties(ownProperties, accessorPropertiesOnly, callback) 
+{
+    if (!this._objectId) {
+        callback(null, null);
+        return;
+    }
+
+	var waiting = 0,
+		objectId = this._objectId;
+	
+    function remoteObjectBinder(error, properties, internalProperties) 
+    {
+        function getPropertyValue(name)
+        {
+			RuntimeAgent.callFunctionOn(objectId,'function() { return this["'+name+'"]; }',
+				function(o, payload)
+				{
+					result.push(new WebInspector.RemoteObjectProperty(name,WebInspector.RemoteObject.fromPayload(payload)));
+					waiting--;
+					if (!waiting)
+						callback(result,internalPropertiesResult)
+				})
+        }
+        
+        if (error)
+        {
+            callback(null, null);
+            return;
+        }
+
+        var result = [];
+        for (var i = 0; properties && i < properties.length; ++i)
+        {
+            var property = properties[i];
+
+			if (property.get || property.set)
+			{
+				if (!accessorPropertiesOnly)
+				{
+					waiting++;
+					getPropertyValue(property.name);
+				}
+			}
+			else
+				result.push(new WebInspector.RemoteObjectProperty(property.name, null, property));
+        }
+
+        var internalPropertiesResult = null;
+        if (internalProperties)
+        {
+            internalPropertiesResult = [];
+            for (var i = 0; i < internalProperties.length; i++)
+            {
+                var property = internalProperties[i];
+                if (!property.value)
+                    continue;
+                internalPropertiesResult.push(new WebInspector.RemoteObjectProperty(property.name, WebInspector.RemoteObject.fromPayload(property.value)));
+            }
+        }
+        if (!waiting)
+			callback(result, internalPropertiesResult);
+    }
+    this._runtimeAgent.getProperties(this._objectId, ownProperties, accessorPropertiesOnly, remoteObjectBinder);
+}
