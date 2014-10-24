@@ -29,14 +29,13 @@ handler to an object is even cheaper.
 
 Usage
 -----
-
-1. Include Ether
++ Step 1: include Ether:
 ```html
-   <script src="registry.js">
-   <script src="registrar.js">
-   <script src="ether.js">
+<script src="registry.js">
+<script src="registrar.js">
+<script src="ether.js">
 ```
-2. There is no step 2.  You don't need to create a model or use special methods to set values
++ Step 2: There is no step 2.  You don't need to create a model or use special methods to set values
 into it.  Your objects continue to look and act exactly like JavaScript objects.
 
 FAQ
