@@ -29,7 +29,7 @@ handler to an object is even cheaper.
 
 Usage
 -----
-+ Step 1: include Ether:
++ Step 1: Include Ether:
 ```html
 <script src="registry.js">
 <script src="registrar.js">
