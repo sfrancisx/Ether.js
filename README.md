@@ -48,7 +48,7 @@ limitation is that you can't create your own getters and setters.
 I think Ether could be less detectable, but that gets kind of crazy.  Ether could replace
 `Object.defineProperty()` with its own implementation, and chain your getters/setters, for example.
 
-Ether include a patch for Chrome's debugger.  If you don't apply the patch, the debugger shows
+Ether includes a patch for Chrome's debugger.  If you don't apply the patch, the debugger shows
 Ether's getters/setters when you examine an object, instead of the values.  If you do apply the
 patch, the debugger has to evaluate the getter to display the value.  If you use a getter on
 a non-etherized object that has complex getters this may have unintended side effects.
